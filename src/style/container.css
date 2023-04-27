@@ -1,0 +1,6 @@
+$padding: 2rem;
+
+.container {
+    width: min(1170px , calc(100% - $padding));
+    margin: 0 auto;
+}

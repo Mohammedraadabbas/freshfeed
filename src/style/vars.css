@@ -1,0 +1,13 @@
+$primaryColor: #381dd8;
+$secondaryColor: #fc5252;
+
+$textColor: #292d33;
+$headingColor: #212B36;
+$subheadingColor: #061c3d;
+
+
+$headerHeight: 90px;
+
+/* screens */
+
+$medium: width <= 760px;
