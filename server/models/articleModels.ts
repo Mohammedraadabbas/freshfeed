@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document, InferSchemaType } from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 
 let Article = new mongoose.Schema(
     {
-        user: {
+        creator: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true
@@ -19,7 +19,7 @@ let Article = new mongoose.Schema(
         },
 
         body: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Object,
             required: true,
         },
 

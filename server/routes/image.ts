@@ -1,6 +1,7 @@
 import express from "express";
-import { handleUpload, handleGetImage } from "../controllers/uploadController.js";
+import { handleUpload, handleGetImage } from "../controllers/imageController.js";
 import { upload } from "../middleware/multerUpload.js";
+import { checkId } from "../middleware/checkId.js";
 
 let router = express.Router();
 
@@ -10,5 +11,5 @@ router
         res.render("index");
     })
     .post(upload.single("upload"), handleUpload);
-    router.route("/image/:id").get(handleGetImage)
+    router.route("/:id").get(checkId,handleGetImage)
 export default router;

@@ -66,8 +66,8 @@ export const handelUpdateArticle = async (
             res.status(404).send({ error: "article not found" });
             return;
         }
-        console.log(article.user.toString() !== userId);
-        if (article.user.toString() !== userId) {
+        console.log(article.creator.toString() !== userId);
+        if (article.creator.toString() !== userId) {
             res.status(401).send({ error: "this user is not authorized" });
             return;
         }
@@ -105,7 +105,7 @@ export const handelDeleteArticle = async (
             res.status(404).send({ error: "article not found" });
             return;
         }
-        if (article.user.toString() !== userId) {
+        if (article.creator.toString() !== userId) {
             res.status(401).send({ error: "this user is not authorized" });
             return;
         }
