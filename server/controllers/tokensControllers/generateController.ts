@@ -10,14 +10,14 @@ export const generateRefreshToken = (payload: { id: Types.ObjectId }) => {
 
 export const generateAccessToken = (payload: { id: Types.ObjectId }) => {
     return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
-        expiresIn: "10m",
+        expiresIn: "15m",
     });
 };
 
 export const generateMagicToken = (
-    payload: { id: Types.ObjectId } | Omit<UserType, "username">
+    payload: { id: Types.ObjectId } | Omit<UserType, "username" | "avatar">
 ) => {
     return jwt.sign(payload, process.env.VERIFY_TOKEN_SECRET!, {
-        expiresIn: "10s",
+        expiresIn: "10m",
     });
 };

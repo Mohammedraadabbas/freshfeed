@@ -1,7 +1,7 @@
 import express from "express"
-import { handelRequestToken } from "../controllers/requestTokenController.js"
+import { handleRequestToken } from "../controllers/requestTokenController.js"
 let router = express.Router()
 
-router.get("/",handelRequestToken)
+router.get("/",handleRequestToken)
 
 export default router

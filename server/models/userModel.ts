@@ -17,11 +17,17 @@ let User = new Schema({
         required: true,
     },
 
-    profileImage: {
+    avatar: {
         type: Types.ObjectId,
-        ref: "usersProfileImage",
-        required:false
-    }
+        ref: "Image's",
+        required: false,
+    },
+
+    role: {
+        type: String,
+        required: true,
+        enum: ["user", "admin", "superadmin"],
+    },
 });
 export type UserType = InferSchemaType<typeof User>;
 

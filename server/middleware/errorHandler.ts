@@ -22,12 +22,11 @@ export const errorHandler = (
     next: NextFunction
 ) => {
     if (error instanceof HttpError) {
-        console.log(error.message)
         return res.status(error.status).json({ error: error.message });
     }
     if (error instanceof MulterError) {
         return res.status(400).json({ error: error.message });
     }
-    console.log(error.message)
+
     res.status(500).json({ error: error.message });
 };

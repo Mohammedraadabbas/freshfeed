@@ -5,7 +5,13 @@ let Article = new mongoose.Schema(
         creator: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: true,
+        },
+
+        headerImage: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Image's",
+            required: true,
         },
 
         title: {
@@ -27,9 +33,10 @@ let Article = new mongoose.Schema(
             type: String,
             required: true,
             enum: ["published", "unpublished"],
-            default: "published",
+            default: "unpublished",
         },
     },
+    
     { timestamps: true }
 );
 

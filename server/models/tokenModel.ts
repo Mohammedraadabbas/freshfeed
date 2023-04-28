@@ -23,13 +23,13 @@ let Token: Schema = new Schema({
 
 export type TokenType = InferSchemaType<typeof Token>;
 
+const mongooseModel = mongoose.model<TokenType>("Token", Token);
+
 agenda.define("remove after 5m", async (job: Job<{ token: string }>, done) => {
     console.log("Executing job: remove after 5m");
     console.log("Job data: ", job.attrs.data);
     try {
-        const result = await mongoose
-            .model("token")
-            .deleteOne({ token: job.attrs.data.token });
+        const result = await mongooseModel.deleteOne({ token: job.attrs.data.token });
         console.log("Result: ", result);
         await job.remove();
         done();
@@ -50,4 +50,4 @@ agenda.on("ready", function () {
 });
 
 
-export default mongoose.model<TokenType>("Token", Token);;
+export default mongooseModel;

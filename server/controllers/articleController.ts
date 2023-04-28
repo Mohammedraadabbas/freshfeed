@@ -1,80 +1,78 @@
-import Article from "../models/articleModels.js";
-import { Request, Response } from "express";
+import Article, { ArticleType } from "../models/articleModels.js";
+import { Request, Response, NextFunction } from "express";
 import { AuthRequest } from "../middleware/verifyJWT.js";
+import { HttpError } from "../middleware/errorHandler.js";
+import { checkId } from "../middleware/checkId.js";
 
-
-export const handelGetArticle = async (
-    req:AuthRequest,
-    res: Response
+export const handleGetArticle = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     let page = req.query.page || 1;
     let limit = 10;
-    let user = req.userId!;
+    let { userId } = req;
     try {
-        let articles = await Article.find({ user })
+        let articles = await Article.find({ creator: userId })
             .skip((Number(page) - 1) * limit)
             .limit(limit)
             .exec();
-        if (articles.length === 0) {
-            res.status(404).send({ error: "There Is no article" });
-            return;
-        }
+        if (articles.length === 0)
+            throw new HttpError(404, "Article not found");
+
         res.status(200).send(articles);
         return;
     } catch (err: any) {
-        res.status(500).send({ error: err.message });
-        return;
+        next(err);
     }
 };
 
-export const handelCreateArticle = async (
+export const handleCreateArticle = async (
     req: AuthRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
-    let user = req.userId;
-    let { title, emoji, status } = req.body;
-    if (!title || !emoji || !status) {
-        res.status(400).json({ error: "Please Fill All The Fields" });
-        return;
-    }
     try {
-        let article = await Article.create({ user, title, emoji, status });
+        let { userId } = req;
+        let { title, headerImage, description, body } = req.body as ArticleType;
+        console.log(req.body);
+        if (!title || !headerImage || !description || !body)
+            throw new HttpError(400, "All fields are required");
+        
+        if (!checkId(headerImage.toString()))
+            throw new HttpError(400, "Invalid id");
+
+        let article = await Article.create({
+            creator: userId,
+            title,
+            headerImage,
+            description,
+            body,
+        });
         res.status(201).json({ articleId: article._id });
         return;
     } catch (err: any) {
-        res.status(500).json({ error: err.message });
-        return;
+        next(err);
     }
 };
 
-export const handelUpdateArticle = async (
+export const handleUpdateArticle = async (
     req: AuthRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     let { userId } = req;
     let articleId = req.params.id;
-    if (!articleId) {
-        res.status(400).send({ error: "Please Provide a article id" });
-        return;
-    }
 
-    let params = req.body;
+    let params = req.body as ArticleType;
     console.log(params);
     try {
         let article = await Article.findById(articleId);
-        if (!article) {
-            res.status(404).send({ error: "article not found" });
-            return;
-        }
-        console.log(article.creator.toString() !== userId);
-        if (article.creator.toString() !== userId) {
-            res.status(401).send({ error: "this user is not authorized" });
-            return;
-        }
-        if (!article) {
-            res.status(404).send({ error: "article not found" });
-            return;
-        }
+        if (!article) throw new HttpError(404, "Article not found");
+
+        if (article.creator.toString() !== userId)
+            throw new HttpError(401, "User is not authorized");
+
         await Article.updateOne({ _id: article._id }, params);
         res.status(200).send({
             message: "article successfully updated",
@@ -82,33 +80,24 @@ export const handelUpdateArticle = async (
         });
         return;
     } catch (err: any) {
-        console.log(err.message);
-        res.status(500).send({ error: err.message });
-        return;
+        next(err);
     }
 };
 
-export const handelDeleteArticle = async (
+export const handleDeleteArticle = async (
     req: AuthRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     let { userId } = req;
     let articleId = req.params.id;
-    if (!articleId) {
-        res.status(400).send({ error: "Please Provide a article id" });
-        return;
-    }
 
     try {
         let article = await Article.findById(articleId);
-        if (!article) {
-            res.status(404).send({ error: "article not found" });
-            return;
-        }
-        if (article.creator.toString() !== userId) {
-            res.status(401).send({ error: "this user is not authorized" });
-            return;
-        }
+        if (!article) throw new HttpError(404, "Article not found");
+
+        if (article.creator.toString() !== userId)
+            throw new HttpError(401, "User is not authorized");
 
         await Article.deleteOne({ _id: articleId });
         res.status(200).send({
@@ -117,7 +106,6 @@ export const handelDeleteArticle = async (
         });
         return;
     } catch (err: any) {
-        res.status(500).send({ error: err.message });
-        return;
+        next(err);
     }
 };

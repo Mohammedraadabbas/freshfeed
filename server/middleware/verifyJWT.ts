@@ -9,22 +9,26 @@ export interface AuthRequest extends Request {
 
 export const verifyJWT = (req: any, res: Response, next: NextFunction) => {
     const authHeader = req.headers["authorization"];
-    if (!authHeader) return res.sendStatus(401);
-    const token = authHeader.split(" ")[1];
     try {
+        if (!authHeader)
+            throw new HttpError(401, "Authorization header not found");
+
+        const token = authHeader.split(" ")[1];
+        if (!token) throw new HttpError(401, "Access token not found");
+
         jwt.verify(
             token,
             process.env.ACCESS_TOKEN_SECRET!,
             (err: any, decoded: any) => {
                 if (err) {
-                    throw new HttpError(401,"Invalid access token")
-                }  
+                    throw new HttpError(401, "Invalid access token");
+                }
                 req.userId = decoded.id as Types.ObjectId;
+                next()
             }
         );
-
     } catch (err) {
         next(err);
-        return
-    } 
+        return;
+    }
 };

@@ -15,22 +15,25 @@ export let handelNewUser = async (
     res: Response,
     next: NextFunction
 ) => {
-    let { name, email } = req.body;
-    
+    let { name, email, role } = req.body as UserType;
+
     try {
         if (!email) throw new HttpError(404, "Please provide a email");
-    
+
         if (!name) throw new HttpError(404, "Please provide a name");
+
+        if (!role) throw new HttpError(404, "Please provide a role");
+        const validRoles = ["admin", "user", "superadmin"];
+
+        if (!validRoles.includes(role))
+            throw new HttpError(400, "Invalid role");
+
         let user = await User.findOne({ email: email });
         if (user) {
             throw new HttpError(403, "User already exists");
-
-            // return res.status(403).json({
-            //     error: "User already exists",
-            // });
         }
 
-        let magicEmailToken = await generateMagicToken({ name, email });
+        let magicEmailToken = await generateMagicToken({ name, email, role });
         let message = `http://192.168.0.108:3000/${magicEmailToken}`;
         await sendEmail({
             toEmail: email,
@@ -42,7 +45,7 @@ export let handelNewUser = async (
         });
     } catch (err: any) {
         next(err);
-        return
+        return;
     }
 };
 
@@ -51,12 +54,14 @@ export const VerifyRegisterToken = async (
     res: Response,
     next: NextFunction
 ) => {
-    if (req.cookies?.token) return res.redirect("/");
     let token = req.params.token;
-    if (!token) return res.redirect("/");
-
+    if (!token) throw new HttpError(404, "token is required");
+    console.log(token);
     try {
-        let { name, email } = await verifyMagicToken(token) as Omit<UserType, "username">;
+        let { name, email, role } = (await verifyMagicToken(token)) as Omit<
+            UserType,
+            "username"
+        >;
 
         let user = await User.findOne({ email });
         if (user) return res.status(403).send({ error: "User already exists" });
@@ -66,6 +71,7 @@ export const VerifyRegisterToken = async (
             name,
             email,
             username,
+            role,
         });
 
         let refreshToken = await generateRefreshToken({ id: newUser._id });
@@ -79,6 +85,6 @@ export const VerifyRegisterToken = async (
         await Token.create({ user: newUser._id, token: refreshToken });
         return res.status(201).json({ accessToken });
     } catch (err: any) {
-        return res.status(500).send(err.message);
+        next(err);
     }
 };
