@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyRefreshToken } from "./tokensControllers/verifyController.js";
-import { generateAccessToken } from "./tokensControllers/generateController.js";
+import { verifyRefreshToken } from "../auth/verifyJWT.js";
+import { generateAccessToken } from "../auth/generateJWT.js";
 import Token from "../models/tokenModel.js";
-import { Types } from "mongoose";
 import { HttpError } from "../middleware/errorHandler.js";
 
 export let handleRequestToken = async (
@@ -21,7 +20,7 @@ export let handleRequestToken = async (
             throw new HttpError(401, "Token not found in database");
         }
 
-        let id = verifyRefreshToken(refreshToken);
+        let { id } = verifyRefreshToken(refreshToken);
         let accessToken = await generateAccessToken({ id });
 
         res.status(201).json({ accessToken });

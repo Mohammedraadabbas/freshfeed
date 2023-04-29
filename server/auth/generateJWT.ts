@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
-import { UserType } from "../../models/userModel.js";
 
 export const generateRefreshToken = (payload: { id: Types.ObjectId }) => {
     return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
@@ -14,10 +13,10 @@ export const generateAccessToken = (payload: { id: Types.ObjectId }) => {
     });
 };
 
-export const generateMagicToken = (
-    payload: { id: Types.ObjectId } | Omit<UserType, "username" | "avatar">
+export const generateMagicToken = <T>(
+    payload: T
 ) => {
-    return jwt.sign(payload, process.env.VERIFY_TOKEN_SECRET!, {
+    return jwt.sign(payload!, process.env.VERIFY_TOKEN_SECRET!, {
         expiresIn: "10m",
     });
 };

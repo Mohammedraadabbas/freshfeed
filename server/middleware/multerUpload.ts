@@ -1,7 +1,5 @@
-import multer, { FileFilterCallback, MulterError } from "multer";
+import multer, { FileFilterCallback } from "multer";
 import { Request } from "express";
-import { HttpError } from "./errorHandler.js";
-import { ImageType } from "../models/imageModel";
 const storage = multer.memoryStorage();
 
 const fileFilter = function (
@@ -11,9 +9,9 @@ const fileFilter = function (
 ) {
     // Only accept image files
     if (file.mimetype.startsWith("image/")) {
-        cb(null,true)
+        cb(null, true);
     } else {
-        const error = new multer.MulterError("LIMIT_UNEXPECTED_FILE","upload");
+        const error = new multer.MulterError("LIMIT_UNEXPECTED_FILE", "upload");
         cb(error);
     }
 };

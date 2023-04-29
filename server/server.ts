@@ -1,9 +1,4 @@
-import express, {
-    ErrorRequestHandler,
-    Request,
-    Response,
-    NextFunction,
-} from "express";
+import express from "express";
 import { errorHandler } from "./middleware/errorHandler.js";
 import dotenv from "dotenv";
 import registerRoute from "./routes/register.js";

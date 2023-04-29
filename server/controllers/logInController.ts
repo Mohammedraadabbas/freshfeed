@@ -5,9 +5,9 @@ import {
     generateMagicToken,
     generateAccessToken,
     generateRefreshToken,
-} from "./tokensControllers/generateController.js";
+} from "../auth/generateJWT.js";
 import { sendEmail } from "./sendEmailController.js";
-import { verifyMagicToken } from "./tokensControllers/verifyController.js";
+import { verifyMagicToken } from "../auth/verifyJWT.js";
 import { Types } from "mongoose";
 
 export let handelLogin = async (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ export let handelLogin = async (req: Request, res: Response) => {
             });
         }
 
-        let magicEmailToken = await generateMagicToken({ id: user.id });
+        let magicEmailToken = await generateMagicToken<{id: Types.ObjectId}>({ id: user.id });
         let message = `http://192.168.0.108:4000/login/verify${magicEmailToken}`;
         await sendEmail({
             toEmail: email,
@@ -50,7 +50,7 @@ export const VerifyLogInToken = async (req: Request, res: Response) => {
     if (!token) return res.redirect("/");
 
     try {
-        let { id } = verifyMagicToken(token) as { id: Types.ObjectId };
+        let { id } = verifyMagicToken<{ id: Types.ObjectId }>(token);
 
         let user = await User.findById(id);
         if (!user)

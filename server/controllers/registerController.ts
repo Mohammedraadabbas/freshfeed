@@ -5,9 +5,9 @@ import {
     generateMagicToken,
     generateRefreshToken,
     generateAccessToken,
-} from "./tokensControllers/generateController.js";
+} from "../auth/generateJWT.js";
 import { sendEmail } from "./sendEmailController.js";
-import { verifyMagicToken } from "./tokensControllers/verifyController.js";
+import { verifyMagicToken } from "../auth/verifyJWT.js";
 import { HttpError } from "../middleware/errorHandler.js";
 
 export let handelNewUser = async (
@@ -33,7 +33,7 @@ export let handelNewUser = async (
             throw new HttpError(403, "User already exists");
         }
 
-        let magicEmailToken = await generateMagicToken({ name, email, role });
+        let magicEmailToken = await generateMagicToken<Omit<UserType, "username">>({ name, email, role });
         let message = `http://192.168.0.108:3000/${magicEmailToken}`;
         await sendEmail({
             toEmail: email,
@@ -58,10 +58,13 @@ export const VerifyRegisterToken = async (
     if (!token) throw new HttpError(404, "token is required");
     console.log(token);
     try {
-        let { name, email, role } = (await verifyMagicToken(token)) as Omit<
-            UserType,
-            "username"
-        >;
+        // let { name, email, role } = (await verifyMagicToken(token)) as Omit<
+        //     UserType,
+        //     "username"
+        // >;
+        let { name, email, role } = await verifyMagicToken<
+            Omit<UserType, "username">
+        >(token);
 
         let user = await User.findOne({ email });
         if (user) return res.status(403).send({ error: "User already exists" });

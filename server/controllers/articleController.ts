@@ -1,5 +1,5 @@
 import Article, { ArticleType } from "../models/articleModels.js";
-import { Request, Response, NextFunction } from "express";
+import {  Response, NextFunction } from "express";
 import { AuthRequest } from "../middleware/verifyJWT.js";
 import { HttpError } from "../middleware/errorHandler.js";
 import { checkId } from "../middleware/checkId.js";

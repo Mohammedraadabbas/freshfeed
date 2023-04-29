@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType, Model, Schema, model } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 import Agenda, { Job } from "agenda";
 import dotenv from "dotenv";
 
@@ -26,8 +26,6 @@ export type TokenType = InferSchemaType<typeof Token>;
 const mongooseModel = mongoose.model<TokenType>("Token", Token);
 
 agenda.define("remove after 5m", async (job: Job<{ token: string }>, done) => {
-    console.log("Executing job: remove after 5m");
-    console.log("Job data: ", job.attrs.data);
     try {
         const result = await mongooseModel.deleteOne({ token: job.attrs.data.token });
         console.log("Result: ", result);
@@ -40,12 +38,10 @@ agenda.define("remove after 5m", async (job: Job<{ token: string }>, done) => {
 });
 
 Token.post("save", function (doc) {
-    console.log("Token saved: ", this);
     agenda.schedule("in 1 minutes", "remove after 5m", { token: doc.token });
 });
 
 agenda.on("ready", function () {
-    console.log("Agenda is ready, starting jobs...");
     agenda.start();
 });
 

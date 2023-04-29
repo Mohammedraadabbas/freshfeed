@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
-import { UserType } from "../../models/userModel.js";
-import { HttpError } from "../../middleware/errorHandler.js";
-export const verifyRefreshToken = (token: string): Types.ObjectId => {
+import { UserType } from "../models/userModel.js";
+import { HttpError } from "../middleware/errorHandler.js";
+export const verifyRefreshTokenV2 = (token: string): Types.ObjectId => {
     try {
         const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!) as
             | { id: Types.ObjectId }
@@ -24,7 +24,9 @@ export const verifyRefreshToken = (token: string): Types.ObjectId => {
     }
 };
 
-export const verifyMagicToken = (
+
+
+export const verifyMagicTokenV2 = (
     token: string
 ): { id: Types.ObjectId } | Omit<UserType, "username"> => {
     try {
@@ -36,7 +38,7 @@ export const verifyMagicToken = (
         if (typeof decoded === "string") {
             throw new HttpError(401, "Invalid magic token");
         }
-        
+
         return decoded;
     } catch (err) {
         if (err instanceof jwt.TokenExpiredError) {
@@ -47,4 +49,12 @@ export const verifyMagicToken = (
             throw new HttpError(401, "Invalid magic token");
         }
     }
+};
+
+export const verifyRefreshToken = (token: string): { id: Types.ObjectId } => {
+        return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!) as { id: Types.ObjectId }
+};
+
+export const verifyMagicToken = <T>(token: string) => {
+    return jwt.verify(token, process.env.VERIFY_TOKEN_SECRET!) as T;
 };

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose, { Types } from "mongoose";
 import { HttpError } from "../middleware/errorHandler.js";
-import Image, {ImageType} from "../models/imageModel.js";
+import Image from "../models/imageModel.js";
 import { AuthRequest } from "../middleware/verifyJWT.js";
 
 export const handleUpload = async (

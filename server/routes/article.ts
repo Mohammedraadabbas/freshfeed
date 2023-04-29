@@ -1,4 +1,4 @@
-import express, { Request } from "express";
+import express from "express";
 import { verifyJWT } from "../middleware/verifyJWT.js";
 import {
     handleGetArticle,
@@ -7,7 +7,6 @@ import {
     handleDeleteArticle,
 } from "../controllers/articleController.js";
 import  checkId  from "../middleware/checkId.js";
-import { upload } from "../middleware/multerUpload.js";
 
 let router = express.Router();
 router
