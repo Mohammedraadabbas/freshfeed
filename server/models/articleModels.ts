@@ -28,7 +28,10 @@ let Article = new mongoose.Schema(
             type: Object,
             required: true,
         },
-
+        tags: {
+            type: Array,
+            required: true
+        },
         status: {
             type: String,
             required: true,
@@ -42,4 +45,4 @@ let Article = new mongoose.Schema(
 
 export type ArticleType = InferSchemaType<typeof Article>;
 
-export default mongoose.model<ArticleType>("Article's", Article);
+export default mongoose.model<ArticleType>("Articles", Article);

@@ -3,10 +3,13 @@ import {
     handelNewUser,
     VerifyRegisterToken,
 } from "../controllers/registerController.js";
+import { verifyRegisterToken } from "../middleware/verifyJWT.js";
+import validateUserCredentials from "../middleware/validateUserCredentials.js";
+
 
 let router = express.Router();
 
-router.route("/").post(handelNewUser);
-router.route("/verify/:token").get(VerifyRegisterToken);
+router.route("/").post(validateUserCredentials,handelNewUser);
+router.route("/verify/:token").get(verifyRegisterToken,VerifyRegisterToken);
 
 export default router;

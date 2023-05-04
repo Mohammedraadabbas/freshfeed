@@ -15,6 +15,13 @@ let User = new Schema({
     email: {
         type: String,
         required: true,
+        lowercase:true
+    },
+
+    sex: {
+        type: String,
+        required: true,
+        enum: ["male", "female"],
     },
 
     avatar: {

@@ -1,5 +1,5 @@
 import Article, { ArticleType } from "../models/articleModels.js";
-import {  Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { AuthRequest } from "../middleware/verifyJWT.js";
 import { HttpError } from "../middleware/errorHandler.js";
 import { checkId } from "../middleware/checkId.js";
@@ -35,12 +35,6 @@ export const handleCreateArticle = async (
     try {
         let { userId } = req;
         let { title, headerImage, description, body } = req.body as ArticleType;
-        console.log(req.body);
-        if (!title || !headerImage || !description || !body)
-            throw new HttpError(400, "All fields are required");
-        
-        if (!checkId(headerImage.toString()))
-            throw new HttpError(400, "Invalid id");
 
         let article = await Article.create({
             creator: userId,
@@ -65,7 +59,6 @@ export const handleUpdateArticle = async (
     let articleId = req.params.id;
 
     let params = req.body as ArticleType;
-    console.log(params);
     try {
         let article = await Article.findById(articleId);
         if (!article) throw new HttpError(404, "Article not found");
@@ -98,7 +91,6 @@ export const handleDeleteArticle = async (
 
         if (article.creator.toString() !== userId)
             throw new HttpError(401, "User is not authorized");
-
         await Article.deleteOne({ _id: articleId });
         res.status(200).send({
             message: "article Deleted Successfully",

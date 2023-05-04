@@ -7,33 +7,25 @@ import {
     generateAccessToken,
 } from "../auth/generateJWT.js";
 import { sendEmail } from "./sendEmailController.js";
-import { verifyMagicToken } from "../auth/verifyJWT.js";
 import { HttpError } from "../middleware/errorHandler.js";
+import { AuthRequest } from "../middleware/verifyJWT.js";
 
 export let handelNewUser = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    let { name, email, role } = req.body as UserType;
+    let { name, email, sex } = req.body as UserType;
 
     try {
-        if (!email) throw new HttpError(404, "Please provide a email");
-
-        if (!name) throw new HttpError(404, "Please provide a name");
-
-        if (!role) throw new HttpError(404, "Please provide a role");
-        const validRoles = ["admin", "user", "superadmin"];
-
-        if (!validRoles.includes(role))
-            throw new HttpError(400, "Invalid role");
 
         let user = await User.findOne({ email: email });
         if (user) {
             throw new HttpError(403, "User already exists");
         }
 
-        let magicEmailToken = await generateMagicToken<Omit<UserType, "username">>({ name, email, role });
+        let magicEmailToken = generateMagicToken({ name, email, sex });
+
         let message = `http://192.168.0.108:3000/${magicEmailToken}`;
         await sendEmail({
             toEmail: email,
@@ -50,21 +42,14 @@ export let handelNewUser = async (
 };
 
 export const VerifyRegisterToken = async (
-    req: Request,
+    req: AuthRequest,
     res: Response,
     next: NextFunction
 ) => {
-    let token = req.params.token;
-    if (!token) throw new HttpError(404, "token is required");
-    console.log(token);
+    
     try {
-        // let { name, email, role } = (await verifyMagicToken(token)) as Omit<
-        //     UserType,
-        //     "username"
-        // >;
-        let { name, email, role } = await verifyMagicToken<
-            Omit<UserType, "username">
-        >(token);
+
+        let { name, email, sex } = req.user!
 
         let user = await User.findOne({ email });
         if (user) return res.status(403).send({ error: "User already exists" });
@@ -74,10 +59,10 @@ export const VerifyRegisterToken = async (
             name,
             email,
             username,
-            role,
+            sex,
         });
 
-        let refreshToken = await generateRefreshToken({ id: newUser._id });
+        let refreshToken = await generateRefreshToken({ id: newUser._id  });
         let accessToken = await generateAccessToken({ id: newUser._id });
         res.cookie("token", refreshToken, {
             httpOnly: true,
@@ -87,7 +72,8 @@ export const VerifyRegisterToken = async (
         });
         await Token.create({ user: newUser._id, token: refreshToken });
         return res.status(201).json({ accessToken });
+
     } catch (err: any) {
-        next(err);
+        return next(err);
     }
 };
