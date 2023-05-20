@@ -1,48 +1,41 @@
 import mongoose, { InferSchemaType } from "mongoose";
 
-let Article = new mongoose.Schema(
+const articleSchema = new mongoose.Schema(
     {
+        _id: {
+            type: String,
+            required: true,
+        },
         creator: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },
-
-        headerImage: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Image's",
-            required: true,
-        },
-
         title: {
             type: String,
             required: true,
         },
-
         description: {
             type: String,
             required: true,
         },
-
         body: {
             type: Object,
             required: true,
         },
         tags: {
-            type: Array,
-            required: true
-        },
-        status: {
-            type: String,
+            type: [String], 
             required: true,
-            enum: ["published", "unpublished"],
-            default: "unpublished",
+        },
+        published: {
+            type: Boolean,
+            required: true,
+            default: false, 
         },
     },
-    
     { timestamps: true }
 );
 
-export type ArticleType = InferSchemaType<typeof Article>;
+export type ArticleType = InferSchemaType<typeof articleSchema>;
 
-export default mongoose.model<ArticleType>("Articles", Article);
+export default mongoose.model<ArticleType>("Article", articleSchema);

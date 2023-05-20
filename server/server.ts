@@ -5,9 +5,10 @@ import registerRoute from "./routes/register.js";
 import logInRoute from "./routes/logIn.js";
 import logoutRoute from "./routes/logOut.js";
 import tokenRoute from "./routes/token.js";
-import articleRoute from "./routes/article.js";
+import articlesRoute from "./routes/articles.js";
+import userRoute from "./routes/user.js";
 import uploadRoute from "./routes/image.js";
-// import profileRoute from "./routes/profileRoute.js";
+import cors from "cors"
 
 
 if (process.env.NODE_ENV !== "production") {
@@ -24,7 +25,7 @@ mongoose.connect(process.env.MONGODB_URI!).then(() => {
         console.log("Listening");
     });
 });
-
+app.use(cors())
 app.use(cookieParser());
 app.use(express.static("public"));
 app.use(express.json());
@@ -32,11 +33,11 @@ app.use(express.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
 
 
-app.use("/register", registerRoute);
-app.use("/login", logInRoute);
-app.use("/logout", logoutRoute);
-app.use("/token", tokenRoute);
-app.use("/article", articleRoute);
-app.use("/image", uploadRoute);
-// app.use("/profile" , profileRoute);
+app.use("/api/register", registerRoute);
+app.use("/api/login", logInRoute);
+app.use("/api/logout", logoutRoute);
+app.use("/api/refresh", tokenRoute);
+app.use("/api/articles", articlesRoute);
+app.use("/api/user", userRoute);
+app.use("/api/images", uploadRoute);
 app.use(errorHandler);

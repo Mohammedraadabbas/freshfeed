@@ -2,6 +2,7 @@ import logo from "../assets/logo.svg";
 import { NavLink } from "react-router-dom";
 import Home from "../pages/home";
 import { useState } from "react";
+import { Button } from "./common/button";
 
 export function Header() {
     let [isOpen, setIsOpen] = useState(false);
@@ -49,7 +50,7 @@ export function Header() {
                     </ul>
                 </nav>
                 <div className="rightSide">
-                    <button className="button primary">Sign up</button>
+                    <Button text="Sign up" type="Primary"/>
                     <button
                         className="hamburgerMenu button"
                         role="menu"

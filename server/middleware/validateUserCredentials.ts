@@ -10,7 +10,6 @@ const validateUserCredentials = (
 ) => {
     try {
         const { error, value } = userValidator<UserType>(req.body);
-        console.log(error);
         if (error) throw new HttpError(400, JSON.stringify(error.details));
         next();
     } catch (err) {

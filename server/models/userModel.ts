@@ -1,6 +1,6 @@
 import mongoose, { InferSchemaType, Model, Schema, Types } from "mongoose";
 
-let User = new Schema({
+let UserSchema = new Schema({
     username: {
         type: String,
         unique: true,
@@ -34,9 +34,10 @@ let User = new Schema({
         type: String,
         required: true,
         enum: ["user", "admin", "superadmin"],
+        default: "user"
     },
 });
-export type UserType = InferSchemaType<typeof User>;
+export type UserType = InferSchemaType<typeof UserSchema>;
 
-const UserModel: Model<UserType> = mongoose.model<UserType>("User", User);
+const UserModel: Model<UserType> = mongoose.model<UserType>("Users", UserSchema);
 export default UserModel;

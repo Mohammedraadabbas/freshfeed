@@ -1,0 +1,24 @@
+.top-reads {
+    h2 {
+        text-align: center;
+        span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
+            color: $primaryColor;
+            img {
+                width: 1em;
+                height: 1em;
+            }
+        }
+    }
+    .articles-grid {
+        margin-top:100px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.875rem;
+        @media ($medium) {
+            grid-template-columns: 1fr;
+        }
+    }
+}

@@ -19,14 +19,15 @@ export const errorHandler = (
     next: NextFunction
 ) => {
     console.log("checking error");
+    console.log(error)
     if (error instanceof HttpError) {
         return res.status(error.status).json({ error: error.message });
     }
     if (error instanceof MulterError) {
+        console.log(error)
         return res.status(400).json({ error: error.message });
     }
     if (error instanceof jwt.JsonWebTokenError) {
-        console.log("hi error");
         let message =
             error instanceof jwt.TokenExpiredError
                 ? "token expired"

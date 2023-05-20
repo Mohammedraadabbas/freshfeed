@@ -11,6 +11,7 @@ const fileFilter = function (
     if (file.mimetype.startsWith("image/")) {
         cb(null, true);
     } else {
+        console.log(file.mimetype)
         const error = new multer.MulterError("LIMIT_UNEXPECTED_FILE", "upload");
         cb(error);
     }

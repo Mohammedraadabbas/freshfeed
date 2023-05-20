@@ -11,3 +11,4 @@ $headerHeight: 90px;
 /* screens */
 
 $medium: width <= 760px;
+$small: width <= 480px;

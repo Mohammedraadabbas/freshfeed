@@ -1,8 +1,9 @@
+@import "./global.css";
 @import "./vars.css";
-@import "./pages/home_page/hero.css";
+@import "./components/hero.css";
+@import "./components/TopReads.css";
 @import "./container.css";
 @import "./components/header.css";
-@import "./button.css";
 
 * {
     box-sizing: border-box;
@@ -10,11 +11,3 @@
     margin: 0;
     font-family: 'Lexend', sans-serif;
 }
-
-body {
-    /* overflow-x: hidden; */
-}
-
-/* #root {
-    min-height: 100vh;
-} */

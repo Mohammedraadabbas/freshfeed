@@ -16,10 +16,14 @@ export let handelLogin = async (
     res: Response,
     next: NextFunction
 ) => {
-    let { email } = req.body;
-    if (!email) throw new HttpError(400, "Email is required");
-
+    
     try {
+        const cookies = req.cookies;
+        if (cookies?.token) throw new HttpError(400, "already logged in");
+
+        let { email } = req.body;
+        if (!email) throw new HttpError(400, "Email is required");
+
         let user = await User.findOne({ email: email });
         if (!user) throw new HttpError(404, "User does not exist");
 
@@ -32,6 +36,7 @@ export let handelLogin = async (
             subject: "verification email",
             message,
         });
+        
         return res.status(200).json({
             message: magicEmailToken,
         });

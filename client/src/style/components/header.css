@@ -5,11 +5,6 @@ header {
         justify-content: space-between;
         align-items: center;
         height: $headerHeight;
-        .button {
-            @media ($medium) {
-                font-size: 0.875rem;
-            }
-    }
     }
     .logo {
         img {

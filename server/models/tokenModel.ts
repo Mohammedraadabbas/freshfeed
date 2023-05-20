@@ -28,11 +28,9 @@ const mongooseModel = mongoose.model<TokenType>("Token", Token);
 agenda.define("remove after 5m", async (job: Job<{ token: string }>, done) => {
     try {
         const result = await mongooseModel.deleteOne({ token: job.attrs.data.token });
-        console.log("Result: ", result);
         await job.remove();
         done();
     } catch (error: any) {
-        console.error(error);
         done();
     }
 });

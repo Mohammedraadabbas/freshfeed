@@ -4,98 +4,102 @@ import { AuthRequest } from "../middleware/verifyJWT.js";
 import { HttpError } from "../middleware/errorHandler.js";
 import { checkId } from "../middleware/checkId.js";
 
+export const handleGetArticles = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    let page = req.query.page || 1;
+    // let user = req.query.user as string;
+    let { user, ...filter } = req.query;
+    let limit = 10;
+    console.log("the articles load")
+    try {
+        // let filter: any = { published: true };
+
+        if (checkId(user)) {
+            filter.creator = user;
+        }
+
+        let articles = await Article.find({ ...filter, published: true })
+            .skip((Number(page) - 1) * limit)
+            .limit(limit)
+            .exec();
+
+        if (articles.length === 0)
+            throw new HttpError(404, "Article not found");
+
+        console.log(articles)
+        
+        res.status(200).json(articles);
+        return;
+    } catch (err: any) {
+        next(err);
+    }
+};
+
 export const handleGetArticle = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    let { articleId } = req.params;
+
+    try {
+        let article = await Article.findOne({
+            _id: articleId,
+            published: true,
+        });
+
+        if (article == null) throw new HttpError(404, "Article not found");
+
+        res.status(200).json(article);
+        return;
+    } catch (err: any) {
+        next(err);
+    }
+};
+
+export const handleGetUserArticles = async (
     req: AuthRequest,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
     let page = req.query.page || 1;
     let limit = 10;
-    let { userId } = req;
+
     try {
-        let articles = await Article.find({ creator: userId })
+        let articles = await Article.find({
+            creator: req.userId,
+            published: true,
+        })
             .skip((Number(page) - 1) * limit)
             .limit(limit)
             .exec();
+
         if (articles.length === 0)
             throw new HttpError(404, "Article not found");
 
-        res.status(200).send(articles);
+        res.status(200).json(articles);
         return;
     } catch (err: any) {
         next(err);
     }
 };
 
-export const handleCreateArticle = async (
+export const handleGetArticlesImage = async (
     req: AuthRequest,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
     try {
-        let { userId } = req;
-        let { title, headerImage, description, body } = req.body as ArticleType;
+        let { imageId } = req.params;
+        let image = await Image.findOne({ _id:imageId });
+        if (image == null)
+            throw new HttpError(404, "image not found");
 
-        let article = await Article.create({
-            creator: userId,
-            title,
-            headerImage,
-            description,
-            body,
-        });
-        res.status(201).json({ articleId: article._id });
-        return;
-    } catch (err: any) {
-        next(err);
-    }
-};
-
-export const handleUpdateArticle = async (
-    req: AuthRequest,
-    res: Response,
-    next: NextFunction
-): Promise<void> => {
-    let { userId } = req;
-    let articleId = req.params.id;
-
-    let params = req.body as ArticleType;
-    try {
-        let article = await Article.findById(articleId);
-        if (!article) throw new HttpError(404, "Article not found");
-
-        if (article.creator.toString() !== userId)
-            throw new HttpError(401, "User is not authorized");
-
-        await Article.updateOne({ _id: article._id }, params);
-        res.status(200).send({
-            message: "article successfully updated",
-            articleId: article._id,
-        });
-        return;
-    } catch (err: any) {
-        next(err);
-    }
-};
-
-export const handleDeleteArticle = async (
-    req: AuthRequest,
-    res: Response,
-    next: NextFunction
-): Promise<void> => {
-    let { userId } = req;
-    let articleId = req.params.id;
-
-    try {
-        let article = await Article.findById(articleId);
-        if (!article) throw new HttpError(404, "Article not found");
-
-        if (article.creator.toString() !== userId)
-            throw new HttpError(401, "User is not authorized");
-        await Article.deleteOne({ _id: articleId });
-        res.status(200).send({
-            message: "article Deleted Successfully",
-            articleId: article._id,
-        });
+        res.setHeader("Content-Type", image.mimetype);
+        res.status(200).send(image.image);
         return;
     } catch (err: any) {
         next(err);
