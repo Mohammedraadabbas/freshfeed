@@ -1,0 +1,26 @@
+.container.sign-up {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr 60%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    @media ($medium) {
+        grid-template-columns: 1fr;
+    }
+}
+.form-title {
+    margin-bottom: 32px;
+    font-size: 44px;
+    max-width: 400px;
+}
+.left-con {
+    display: grid;
+    @media ($medium) {
+        justify-content: center;
+        align-items: center;
+    }
+}
+.right-con {
+    width: 100%;
+}

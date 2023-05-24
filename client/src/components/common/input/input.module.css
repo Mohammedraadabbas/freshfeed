@@ -1,0 +1,56 @@
+@import "../../../style/vars.css";
+
+.inputWrapper {
+    position: relative;
+    --borderColor: #e6e8ec;
+    --shadowColor: #0b63e53d;
+    --svgColor: #0b63e5;
+}
+
+.input {
+    outline: none;
+    width: 100%;
+    height: 3rem;
+    border: 1px solid var(--borderColor);
+    border-radius: 5px;
+    font-size: 1rem;
+    padding-inline: 50px;
+    &:focus {
+        /* --borderColor: #0b63e5; */
+        /* border-color: var(--borderColor); */
+        box-shadow: 0px 0px 8px var(--shadowColor);
+    }
+}
+
+.Success {
+    --borderColor: #0f9918;
+    --shadowColor: #0f99181a;
+    --svgColor: #0f9918;
+}
+
+.Error {
+    --borderColor: #e54545;
+    --shadowColor: #e645451a;
+    --svgColor: #e54545;
+}
+
+.Clicked {
+    --borderColor: #0b63e5;
+    --shadowColor: #0b63e5;
+}
+
+.icon {
+    position: absolute;
+    /* width: 24px;
+    height: 24px; */
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+}
+
+.mark {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+}

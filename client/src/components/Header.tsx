@@ -1,10 +1,10 @@
 import logo from "../assets/logo.svg";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Home from "../pages/home";
 import { useState } from "react";
-import { Button } from "./common/button";
+import { ButtonStyle } from "./common/button";
 
-export function Header() {
+export const Header = () => {
     let [isOpen, setIsOpen] = useState(false);
 
     const handleNav = () => {
@@ -50,7 +50,13 @@ export function Header() {
                     </ul>
                 </nav>
                 <div className="rightSide">
-                    <Button text="Sign up" type="Primary"/>
+                    <Link 
+                        style={{textDecoration: "none"}}
+                        to="/sign-up"
+                        className={`${ButtonStyle.button} ${ButtonStyle.Primary}`}
+                    >
+                        Sign Up
+                    </Link>
                     <button
                         className="hamburgerMenu button"
                         role="menu"
@@ -62,4 +68,4 @@ export function Header() {
             </div>
         </header>
     );
-}
+};

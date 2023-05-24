@@ -1,0 +1,29 @@
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap:32px;
+}
+
+.formGroupe {
+    display: flex;
+    flex-direction: column;
+    gap:8px;
+}
+
+.label {
+    font-size: 1rem;
+}
+
+.errorMessage {
+    font-size: 12px;
+    color: #e54545;
+}
+
+.show {
+    display: initial;
+}
+
+.hide {
+    display: none;
+}

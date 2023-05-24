@@ -18,4 +18,8 @@
     &:hover {
         background-color: #2C17AB;
     }
+    &:focus {
+        outline:4px solid #736eff;
+    }
+
 }

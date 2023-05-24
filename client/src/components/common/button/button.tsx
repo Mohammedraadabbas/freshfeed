@@ -2,12 +2,11 @@ import { FC } from "react";
 import style from "./button.module.css"
 
 interface ButtonProps {
-    text: string;
     type: "Primary" | "Secondary";
 }
 
-const Button: FC<ButtonProps> = ({ text, type }) => {
-    return <button className={`${style.button} ${style[type]}`}>{text}</button>;
+const Button: FC<ButtonProps> = ({ type }) => {
+    return <button className={`${style.button} ${style[type]}`}></button>;
 };
 
 export default Button;

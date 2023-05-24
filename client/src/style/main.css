@@ -4,6 +4,7 @@
 @import "./components/TopReads.css";
 @import "./container.css";
 @import "./components/header.css";
+@import "./components/home.css";
 
 * {
     box-sizing: border-box;
