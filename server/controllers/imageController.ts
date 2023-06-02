@@ -13,16 +13,22 @@ export const handleUpload = async (
         if (!req.file) {
             throw new HttpError(400, "No file was uploaded");
         }
-        const userId = req.userId
+        const userId = "00000008898989898989898989898";
         const { originalname, mimetype, buffer } = req.file;
-        
+
         let image = await Image.create({
-            owner:userId,
+            owner: userId,
             name: originalname,
             mimetype,
             file: buffer,
         });
-        res.json({imagId: image._id});
+        // res.json({imageId: image._id});
+        res.json({
+            success: 1,
+            file: {
+                url: `http://192.168.0.111:3001/api/images/${image._id}`,
+            },
+        });
     } catch (err) {
         next(err);
     }
@@ -56,11 +62,14 @@ export const handleDeleteImage = async (
         const id: Types.ObjectId = new mongoose.Types.ObjectId(req.params.id);
         const image = await Image.findById(id);
         if (image == null) throw new HttpError(404, "Image not found");
-        
-        const userId = req.userId;
-        if (image.owner?.toString() !== userId) throw new HttpError(401, "Unauthorized access");
 
-        await Image.deleteOne({_id: id});
+        // const userId = req.userId;
+        const userId = "00000008898989898989898989898";
+
+        if (image.owner?.toString() !== userId)
+            throw new HttpError(401, "Unauthorized access");
+
+        await Image.deleteOne({ _id: id });
 
         res.status(204).json({ message: "Image deleted" });
     } catch (err) {

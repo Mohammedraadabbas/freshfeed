@@ -18,7 +18,6 @@ export let handelNewUser = async (
     let { name, email, sex } = req.body as UserType;
 
     try {
-
         let user = await User.findOne({ email: email });
         if (user) {
             throw new HttpError(403, "User already exists");
@@ -26,14 +25,14 @@ export let handelNewUser = async (
 
         let magicEmailToken = generateMagicToken({ name, email, sex });
 
-        let message = `http://192.168.0.108:3000/${magicEmailToken}`;
-        await sendEmail({
-            toEmail: email,
-            subject: "verification email",
-            message,
-        });
+        // let message = `http://192.168.0.108:3000/${magicEmailToken}`;
+        // await sendEmail({
+        //     toEmail: email,
+        //     subject: "verification email",
+        //     message,
+        // });
         return res.status(200).json({
-            message: "Email sent",
+            magicEmailToken,
         });
     } catch (err: any) {
         next(err);
@@ -41,15 +40,13 @@ export let handelNewUser = async (
     }
 };
 
-export const VerifyRegisterToken = async (
+export const handleRegistration = async (
     req: AuthRequest,
     res: Response,
     next: NextFunction
 ) => {
-    
     try {
-
-        let { name, email, sex } = req.user!
+        let { name, email, sex } = req.user!;
 
         let user = await User.findOne({ email });
         if (user) return res.status(403).send({ error: "User already exists" });
@@ -64,15 +61,14 @@ export const VerifyRegisterToken = async (
 
         let refreshToken = await generateRefreshToken({ id: newUser._id  });
         let accessToken = await generateAccessToken({ id: newUser._id });
+
         res.cookie("token", refreshToken, {
             httpOnly: true,
             expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15),
             secure: false,
-            sameSite: "none",
         });
-        await Token.create({ user: newUser._id, token: refreshToken });
-        return res.status(201).json({ accessToken });
-
+        // await Token.create({ user: newUser._id, token: refreshToken });
+        return res.status(201).json({ accessToken,user:newUser });
     } catch (err: any) {
         return next(err);
     }

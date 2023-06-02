@@ -49,7 +49,7 @@ export const verifyRefreshToken = async (
             res.clearCookie("token");
             throw new HttpError(401, "Token not found in database");
         }
-        
+
         const { id } = jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET!
@@ -70,6 +70,8 @@ export const verifyRegisterToken = async (
     next: NextFunction
 ) => {
     try {
+        const refreshToken: string = req.cookies?.token;
+        if (refreshToken) throw new HttpError(401, "user already registered");
         let MagicToken = req.params.token;
         if (!MagicToken) throw new HttpError(404, "token is required");
 
@@ -90,6 +92,8 @@ export const verifyLoginToken = async (
     next: NextFunction
 ) => {
     try {
+        const refreshToken: string = req.cookies?.token;
+        if (refreshToken) throw new HttpError(401, "user already logged in");
         let MagicToken = req.params.token;
         if (!MagicToken) throw new HttpError(404, "token is required");
 

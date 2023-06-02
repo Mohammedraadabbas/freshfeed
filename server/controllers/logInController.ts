@@ -31,14 +31,14 @@ export let handelLogin = async (
             id: user.id,
         });
         let message = `http://192.168.0.108:4000/login/verify/${magicEmailToken}`;
-        await sendEmail({
-            toEmail: email,
-            subject: "verification email",
-            message,
-        });
+        // await sendEmail({
+        //     toEmail: email,
+        //     subject: "verification email",
+        //     message,
+        // });
         
         return res.status(200).json({
-            message: magicEmailToken,
+            magicEmailToken,
         });
     } catch (err) {
         next(err);
@@ -61,12 +61,11 @@ export const VerifyUserLogin = async (
             httpOnly: true,
             expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15),
             secure: false,
-            sameSite: "none",
         });
 
         await Token.create({ user: user._id, token: refreshToken });
 
-        return res.status(201).json({ accessToken });
+        return res.status(201).json({ user,accessToken });
     } catch (err: any) {
         next(err);
     }

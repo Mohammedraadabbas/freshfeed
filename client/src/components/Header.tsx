@@ -1,12 +1,14 @@
 import logo from "../assets/logo.svg";
 import { Link, NavLink } from "react-router-dom";
 import Home from "../pages/home";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { ButtonStyle } from "./common/button";
+import AuthContext from "../context/AuthProvider";
 
 export const Header = () => {
+    let { auth } = useContext(AuthContext);
     let [isOpen, setIsOpen] = useState(false);
-
+    console.log("header_auth", auth.user);
     const handleNav = () => {
         setIsOpen((prev) => !prev);
     };
@@ -50,20 +52,34 @@ export const Header = () => {
                     </ul>
                 </nav>
                 <div className="rightSide">
-                    <Link 
-                        style={{textDecoration: "none"}}
+                    
+                    {auth?.user != null ? (
+                        <div
+                            style={{
+                                width: "40px",
+                                aspectRatio: "1/1",
+                                borderRadius: "50%",
+                                overflow:"hidden"
+                            }}
+                        >
+                            <img src="/heading-img-1.jpg" />
+                        </div>
+                    ) : (
+                        <Link
+                        style={{ textDecoration: "none" }}
                         to="/sign-up"
                         className={`${ButtonStyle.button} ${ButtonStyle.Primary}`}
                     >
                         Sign Up
                     </Link>
+                    )}
                     <button
-                        className="hamburgerMenu button"
-                        role="menu"
-                        onClick={handleNav}
-                    >
-                        <img src="/hamburgerMenu.svg" alt="" />
-                    </button>
+                            className="hamburgerMenu button"
+                            role="menu"
+                            onClick={handleNav}
+                        >
+                            <img src="/hamburgerMenu.svg" alt="" />
+                        </button>
                 </div>
             </div>
         </header>

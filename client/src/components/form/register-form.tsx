@@ -1,45 +1,47 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import style from "./form.module.css";
 import { Input } from "../common/input";
-import useInput from "../../hooks/useInput";
 import { ButtonStyle } from "../common/button";
-import { userIcon, envelopeIcon,errorIcon } from "../../icons";
+import { userIcon, envelopeIcon, errorIcon } from "../../icons";
+import axios from "../../api/axios";
+import RegisterEmail from "../RegisterEmail";
+import { render } from "@react-email/components";
 
+type status = "Normal" | "Success" | "Error" | "Clicked";
 
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="w-6 h-6"
->
-    <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-    />
-</svg>;
+interface SignUpPros {
+    isSubmit: boolean;
+    nameValue: string;
+    nameInputStatus: status;
+    setNameStatus: React.Dispatch<React.SetStateAction<status>>;
+    handleNameInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    emailValue: string;
+    emailInputStatus: status;
+    setEmailStatus: React.Dispatch<React.SetStateAction<status>>;
+    handleEmailInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleSubmit :  (e: React.FormEvent) => void;
+    error: string
+}
 
-const SignUp: FC<HTMLFormElement> = ({ ...props }) => {
-    const [nameValue, nameInputStatus, setNameStatus, handleNameInput] =
-        useInput({
-            REGEX: /^[A-z][A-z0-9-_]{3,23}$/,
-        });
-
-    const [emailValue, emailInputStatus, setEmailStatus, handleEmailInput] =
-        useInput({
-            REGEX: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
-        });
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (nameInputStatus !== "Success" || emailInputStatus !== "Success") return
-        alert("You have successfully submitted your account")
-    };
+const SignUp: FC<SignUpPros> = ({
+    nameValue,
+    nameInputStatus,
+    setNameStatus,
+    handleNameInput,
+    emailValue,
+    emailInputStatus,
+    setEmailStatus,
+    handleEmailInput,
+    handleSubmit,
+    error,
+    isSubmit,
+    ...props
+}) => {
+    
 
     return (
         <form className={style.form} onSubmit={handleSubmit} {...props}>
+            {error ? <p style={{ color: "red" }}>{error}</p> : null}
             <div className={style.formGroupe}>
                 <label htmlFor="name" className={style.label}>
                     Name
@@ -58,7 +60,7 @@ const SignUp: FC<HTMLFormElement> = ({ ...props }) => {
                     aria-describedby="uidnote"
                     onInput={handleNameInput}
                     onFocus={() =>
-                        setNameStatus((prev) =>
+                        setNameStatus((prev: status) =>
                             prev === "Normal" ? "Clicked" : prev
                         )
                     }
@@ -94,7 +96,7 @@ const SignUp: FC<HTMLFormElement> = ({ ...props }) => {
                     aria-describedby="eidnote"
                     onInput={handleEmailInput}
                     onFocus={() =>
-                        setEmailStatus((prev) =>
+                        setEmailStatus((prev:status) =>
                             prev === "Normal" ? "Clicked" : prev
                         )
                     }
@@ -114,6 +116,7 @@ const SignUp: FC<HTMLFormElement> = ({ ...props }) => {
             </div>
             <button
                 type="submit"
+                disabled={isSubmit}
                 className={`${ButtonStyle.button} ${ButtonStyle.Primary}`}
             >
                 Submit

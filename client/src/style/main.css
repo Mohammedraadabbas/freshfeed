@@ -10,5 +10,44 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    font-family: 'Lexend', sans-serif;
+    font-family: "Lexend", sans-serif;
+}
+
+.ProseMirror {
+    height: 100%;
+}
+
+.image-resizer {
+    width: 100%;
+    position: relative;
+}
+
+.image-resizer .image-wrapper {
+    width: min(400px, calc(100% - 50px));
+    height: min(400px, calc(100% - 50px));
+    max-width: calc(100% - 50px);
+}
+
+.image-resizer .image-wrapper.resize {
+    border: 2px solid #130fe9;
+}
+
+.image-resizer .image-wrapper .postimage.cover{
+    object-fit: cover;
+}
+
+.image-resizer .resize-trigger {
+    position: fixed;
+    top: -59%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.image-resizer .resize-trigger.show {
+    display: block;
+}
+
+#custom {
+    height: 500px;
 }

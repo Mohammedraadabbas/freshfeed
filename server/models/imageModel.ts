@@ -18,8 +18,8 @@ let Image = new mongoose.Schema({
         enum: ["article heading", "article body", "user profile"],
     },
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        type:String,
+        // ref: "User",
     },
 });
 

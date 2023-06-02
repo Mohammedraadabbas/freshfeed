@@ -21,5 +21,7 @@
     &:focus {
         outline:4px solid #736eff;
     }
-
+    &:disabled {
+        background-color: hsl(249, 60%, 72%);
+    }
 }

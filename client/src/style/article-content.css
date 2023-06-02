@@ -1,0 +1,6 @@
+.bulletList {
+    list-style-type: disc;
+}
+li::marker {
+    color: red;
+}

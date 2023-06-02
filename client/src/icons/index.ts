@@ -1,3 +1,13 @@
-export { default as userIcon } from './user';
-export { default as envelopeIcon } from './envelope';
-export { default as errorIcon } from './error';
+export { default as userIcon } from "./user";
+export { default as envelopeIcon } from "./envelope";
+export { default as errorIcon } from "./error";
+export { default as boldIcon } from "./bold";
+export { default as italicIcon } from "./italic";
+export { default as underLineIcon } from "./underLine";
+export { default as bulletListIcon } from "./bulletsList";
+export { default as orderedListIcon } from "./orderedList";
+export { default as strikethroughIcon } from "./strikethrough";
+export { default as alignLeftIcon } from "./alignLeft";
+export { default as alignRightIcon } from "./alignRight";
+export { default as alignCenterIcon } from "./alignCenter";
+export { default as textColorIcon } from "./textColor";

@@ -8,6 +8,7 @@ let router = express.Router();
 
 router
     .route("/")
-    .post(verifyAccessToken,upload.single("upload"), handleUpload);
-    router.route("/:id").get(checkId,handleGetImage).delete(checkId,verifyAccessToken,handleDeleteImage)
+    .post(upload.single("image"), handleUpload);
+    // router.route("/:id").get(checkId,handleGetImage).delete(checkId,verifyAccessToken,handleDeleteImage)
+    router.route("/:id").get(checkId,handleGetImage).delete(checkId,handleDeleteImage)
 export default router;
