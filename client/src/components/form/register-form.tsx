@@ -1,11 +1,8 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import style from "./form.module.css";
 import { Input } from "../common/input";
 import { ButtonStyle } from "../common/button";
 import { userIcon, envelopeIcon, errorIcon } from "../../icons";
-import axios from "../../api/axios";
-import RegisterEmail from "../RegisterEmail";
-import { render } from "@react-email/components";
 
 type status = "Normal" | "Success" | "Error" | "Clicked";
 

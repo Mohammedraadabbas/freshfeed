@@ -1,10 +1,10 @@
 import axios from "../api/axios";
-import React, { useEffect, useContext } from "react";
+import  { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import AuthContext from "../context/AuthProvider";
+import useAuth from "../hooks/useAuth";
 
 const VerifyRegister = () => {
-    let { setAuth } = useContext(AuthContext);
+    let { setAuth } = useAuth();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const token = searchParams.get("token");

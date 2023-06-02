@@ -1,12 +1,11 @@
 import axios from "../api/axios";
 import { useEffect, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import AuthContext from "../context/AuthProvider";
-import { AxiosError } from "axios";
+import useAuth from "../hooks/useAuth";
 
 const VerifyLogin = () => {
     const [error, setError] = useState("");
-    const { setAuth } = useContext(AuthContext);
+    const { setAuth } = useAuth();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const token = searchParams.get("token");

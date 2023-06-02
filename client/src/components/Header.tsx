@@ -1,12 +1,11 @@
 import logo from "../assets/logo.svg";
 import { Link, NavLink } from "react-router-dom";
-import Home from "../pages/home";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { ButtonStyle } from "./common/button";
-import AuthContext from "../context/AuthProvider";
+import useAuth from "../hooks/useAuth";
 
 export const Header = () => {
-    let { auth } = useContext(AuthContext);
+    let { auth } = useAuth();
     let [isOpen, setIsOpen] = useState(false);
     console.log("header_auth", auth.user);
     const handleNav = () => {
