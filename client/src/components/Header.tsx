@@ -7,7 +7,7 @@ import useAuth from "../hooks/useAuth";
 export const Header = () => {
     let { auth } = useAuth();
     let [isOpen, setIsOpen] = useState(false);
-    console.log("header_auth", auth.user);
+    console.log("header_auth", auth);
     const handleNav = () => {
         setIsOpen((prev) => !prev);
     };
@@ -52,7 +52,7 @@ export const Header = () => {
                 </nav>
                 <div className="rightSide">
                     
-                    {auth?.user != null ? (
+                    {auth?._id != null ? (
                         <div
                             style={{
                                 width: "40px",

@@ -7,7 +7,7 @@ import { Header } from "./components/Header";
 import { Article } from "./components/Article";
 import { AuthProvider } from "./context/AuthProvider";
 import VerifyRegister from "./pages/VerifyRegister";
-import Login from "./pages/login";
+import Login from "./pages/Login/login";
 import VerifyLogin from "./pages/VerifyLogin";
 import PreventLoggedUser from "./components/PreventLoggedUser";
 

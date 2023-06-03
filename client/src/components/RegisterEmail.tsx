@@ -14,11 +14,13 @@ import * as React from "react";
 interface NotionMagicLinkEmailProps {
     loginCode?: string;
     magicToken: string;
+    type: "login" | "register"
 }
 
 export const NotionMagicLinkEmail = ({
     loginCode = "sparo-ndigo-amurt-secan",
     magicToken,
+    type
 }: NotionMagicLinkEmailProps) => {
     return(
     <Html>
@@ -26,7 +28,7 @@ export const NotionMagicLinkEmail = ({
         <Preview>Log in with this magic link</Preview>
         <Body style={main} dir="left">
             <Container style={container}>
-                <Heading style={h1}>Login</Heading>
+                <Heading style={h1}>{type}</Heading>
                 <Link
                     href={`http://192.168.0.111:5173/${magicToken}`}
                     target="_blank"
@@ -41,7 +43,6 @@ export const NotionMagicLinkEmail = ({
                 <Text style={{ ...text, marginBottom: "14px" }}>
                     Or, copy and paste this temporary login code:
                 </Text>
-                <code style={code}>{loginCode}</code>
                 <Text
                     style={{
                         ...text,

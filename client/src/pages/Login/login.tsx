@@ -1,25 +1,26 @@
 import { render } from "@react-email/components";
-import RegisterEmail from "../components/RegisterEmail";
-import { ButtonStyle } from "../components/common/button";
-import { Input } from "../components/common/input";
-import useInput from "../hooks/useInput";
-import { envelopeIcon } from "../icons";
-import axios from "../api/axios";
-import React, { useState } from "react";
+import RegisterEmail from "../../components/RegisterEmail";
+import { ButtonStyle } from "../../components/common/button";
+import { Input } from "../../components/common/input";
+import useInput from "../../hooks/useInput";
+import { envelopeIcon, errorIcon } from "../../icons";
+import axios from "../../api/axios";
+import { FormEvent, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import "./style.css";
+import Container from "../../components/container";
 
 const login = () => {
     let [isEmailSent, setIsEmailSent] = useState<boolean>(false);
-    const [error, setError] = useState<boolean>()
+    const [error, setError] = useState<boolean>();
     const location = useLocation();
-
 
     const [emailValue, emailInputStatus, setEmailStatus, handleEmailInput] =
         useInput({
             REGEX: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
         });
 
-    const handleOnSubmit = async (e: React.FormEvent) => {
+    const handleOnSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
             let response = await axios.post("login", {
@@ -33,27 +34,27 @@ const login = () => {
                 message: render(
                     <RegisterEmail
                         magicToken={`login/verify?token=${magicEmailToken}`}
+                        type={"login"}
                     />
                 ),
             });
-
         } catch (err: any) {
             console.log(err);
             if (err.response.data.error === "already logged in")
-            <Navigate to="/" state={{ from: location }} replace />;
+                <Navigate to="/" state={{ from: location }} replace />;
             setError(err.response.data.error);
             return;
         }
     };
 
     return (
-        <div className="container">
+        <Container className="hi">
             {isEmailSent ? (
                 <h2>Email sent</h2>
             ) : (
-                <form onSubmit={handleOnSubmit}>
-                    <h2>login</h2>
-                    {error? <p>{error}</p>:""}
+                <form className="login_form" onSubmit={handleOnSubmit}>
+                    <h2 className="form_title">login</h2>
+                    {error ? <p>{error}</p> : ""}
                     <Input
                         type="email"
                         id="email"
@@ -73,14 +74,22 @@ const login = () => {
                             )
                         }
                     />
+                    <p
+                        id="eidnote"
+                        className={`errorMessage
+                        ${emailInputStatus === "Error" ? "show" : "hide"}
+                    `}
+                    >
+                        {errorIcon} Invalid email address
+                    </p>
                     <button
-                        className={`${ButtonStyle.button} ${ButtonStyle.Primary}`}
+                        className={`${ButtonStyle.button} ${ButtonStyle.Primary} form_submit_btn`}
                     >
                         Log In
                     </button>
                 </form>
             )}
-        </div>
+        </Container>
     );
 };
 

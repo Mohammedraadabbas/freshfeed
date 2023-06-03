@@ -5,12 +5,12 @@ interface InputHookProps {
     REGEX: RegExp;
 }
 
-type Status = "Normal" | "Success" | "Error" | "Clicked";
+export type  InputStatus = "Normal" | "Success" | "Error" | "Clicked";
 
 type InputHookResult = [
     string,
-    Status,
-    React.Dispatch<React.SetStateAction<Status>>,
+    InputStatus,
+    React.Dispatch<React.SetStateAction<InputStatus>>,
     (e: ChangeEvent<HTMLInputElement>) => void
 ];
 
@@ -19,7 +19,7 @@ const useInput = ({
     REGEX,
 }: InputHookProps): InputHookResult => {
     const [value, setValue] = useState(initialValue);
-    const [status, setStatus] = useState<Status>("Normal");
+    const [status, setStatus] = useState<InputStatus>("Normal");
 
     const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);

@@ -43,7 +43,7 @@ export const EDITOR_JS_TOOLS = {
             class: "custom-header-class",
         },
         shortcut: "Ctrl+SHIFT+H",
-    },
+    } ,
     TextSpoiler: TextSpoiler,
     // Color: {
     //     class: ColorPlugin,

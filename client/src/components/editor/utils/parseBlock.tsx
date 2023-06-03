@@ -1,6 +1,6 @@
-import React from "react";
+import { OutputBlockData } from "@editorjs/editorjs";
 
-const parseBlock = (block, index) => {
+export const parseBlock = (block:OutputBlockData, index: string): JSX.Element | null => {
     switch (block.type) {
         case "header":
             const { text, level } = block.data;
@@ -29,13 +29,13 @@ const parseBlock = (block, index) => {
                     <table key={index}>
                         <thead>
                             <tr>
-                                {headings.map((heading, headingIndex) => (
-                                    <th key={headingIndex}>{heading}</th>
+                                {headings.map((heading: string) => (
+                                    <th key={heading}>{heading}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
-                            {rows.map((row, rowIndex) => (
+                            {rows.map((row: string[], rowIndex: number) => (
                                 <tr key={rowIndex}>
                                     {row.map((cell, cellIndex) => (
                                         <td key={cellIndex}>{cell}</td>
@@ -49,7 +49,7 @@ const parseBlock = (block, index) => {
                 return (
                     <table key={index}>
                         <tbody>
-                            {tableContent.map((row, rowIndex) => (
+                            {tableContent.map((row: string[], rowIndex: number) => (
                                 <tr key={rowIndex}>
                                     {row.map((cell, cellIndex) => (
                                         <td key={cellIndex}>{cell}</td>
@@ -65,5 +65,3 @@ const parseBlock = (block, index) => {
             return null;
     }
 };
-
-export default parseBlock;
